@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../../../common/fonts.dart';
 import '../../widgets/community/hot_talk_item.dart';
 import '../../widgets/community/post_item.dart';
+import 'add_post_screen.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -26,6 +27,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       provider.addListener(updateScreen);
+      provider.getPopularPosts();
       await provider.getPosts();
       provider.addList();
     });
@@ -90,26 +92,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
                           size: 20,
                           color: Color(0xFFA6A6A6),
                         ),
-                        SizedBox(width: 5),
+                        SizedBox(width: 10),
                         Text(
-                          '헬스토크 이용가이드',
+                          '다른 사용자들과 대화 해봅시다!',
                           style: mediumText(size: 12, color: Colors.black),
                         ),
                         Spacer(),
-                        Container(
-                          alignment: Alignment.center,
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black,
-                          ),
-                          child: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 11,
-                            color: Colors.white,
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -129,27 +117,16 @@ class _CommunityScreenState extends State<CommunityScreen> {
             SizedBox(height: 16),
             // hot talk
             SizedBox(
-              height: 145,
+              height: 150,
               width: double.infinity,
-              child: ListView(
+              child: ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 5),
                 scrollDirection: Axis.horizontal,
-                children: [
-                  for(int i = 0; i < 10; i++)
-                    HotTalkItem(postData: PostModel(
-                        authorProfile: 3,
-                        reactionCount: 12,
-                        authorId: 13,
-                        authorName: '변지우',
-                        authorTier: '헬중수',
-                        title: '회사가 운동을 방해합니다',
-                        content: '회사 근처 헬스장에서 운동을 하는데 점심시간에 갔다가 온다고 하니까 해봤자 뭐 얼마나 달라진다고 운동하냐며 그 시간에 일이나 더 하립니다',
-                        commentCount: 12,
-                        createdAt: '2025-03-04',
-                        id: 43,
-                        updatedAt: null
-                    ),),
-                ],
+                itemCount: provider.popularPosts.length,
+                itemBuilder: (context, index) {
+                  return provider.popularPosts.isEmpty
+                      ? Text('인기 게시글이 없어요') : HotTalkItem(postData: provider.popularPosts[index],);
+                },
               ),
             ),
             SizedBox(height: 32),
@@ -216,27 +193,37 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   Column(
                     children: provider.allPosts.isEmpty
                         ? [Text('게시글이 없어요')]
-                        : provider.allPosts.map((e) => PostItem(postData: e)).toList(),),
-                  // for(int i = 0; i < 10; i++)
-                  //   PostItem(
-                  //     postData: PostModel(
-                  //       reactionCount: 33,
-                  //       authorProfile: 2,
-                  //       authorId: 13,
-                  //       authorName: '변지우',
-                  //       authorTier: '헬중수',
-                  //       title: '가보입시더',
-                  //       content: '그래서 제가요 진짜 그랬는데 너무 그래서 너무 그거 해버렸어요 진짜 우짜죠 진짜 진짜로 좀 많이 심각심각한 느낌인데',
-                  //       commentCount: 12,
-                  //       createdAt: '2025-03-04',
-                  //       id: 43,
-                  //       updatedAt: null
-                  //     ),
-                  //   ),
+                        : provider.allPosts.map((e) => PostItem(postData: e, provider: provider)).toList(),),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+      floatingActionButton: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(CupertinoPageRoute(builder: (context) => AddPostScreen(),)).then((value) {
+            provider.resetPosts();
+            provider.getPosts();
+          },);
+        },
+        child: Container(
+          width: 80,
+          height: 38,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(200),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.add, size: 20, color: Colors.white,),
+              SizedBox(width: 2,),
+              Text('만들기', style: mediumText(size: 12, color: Colors.white),),
+              SizedBox(width: 7,),
+            ],
+          ),
         ),
       ),
     );

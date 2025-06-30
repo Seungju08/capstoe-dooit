@@ -1,18 +1,23 @@
+import 'package:dooit/data/models/post_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart';
 
 import '../../data/models/challenge/challenge_list_model.dart';
 import '../../data/models/challenge/view_challenge_model.dart';
-import '../../data/models/post_model.dart';
 import '../../data/repositories/challenge_repository.dart';
+import '../../data/repositories/community_repository.dart';
 
 class SearchChallengeProvider extends ChangeNotifier {
+  final CommunityRepository communityRepository = CommunityRepository();
   final ChallengeRepository challengeRepository = ChallengeRepository();
   final TextEditingController keywordController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   ChallengeListModel? challengesData;
   List<ViewChallengeModel> challenges = [];
-  List<PostModel> post = [];
+  List<PostModel> allPosts = [];
+  List<PostModel> posts = [];
   int page = 0;
+  bool havePost = false;
 
   String buttonText = '';
   String searchHintText = '';
@@ -46,9 +51,9 @@ class SearchChallengeProvider extends ChangeNotifier {
     notifyListeners();
   }
   void _resetPosts() {
-    post = [];
-    // challengesData = null;
+    allPosts = [];
     page = 0;
+    havePost = false;
     notifyListeners();
   }
 
@@ -71,14 +76,14 @@ class SearchChallengeProvider extends ChangeNotifier {
     });
   }
   void _addPostList() {
-    // scrollController.addListener(() async {
-    //   if (scrollController.position.pixels >
-    //       scrollController.position.maxScrollExtent - 300 &&
-    //       !challengesData!.last) {
-    //     page += 1;
-    //     await _getChallengesData();
-    //   }
-    // });
+    scrollController.addListener(() async {
+      if (scrollController.position.pixels >
+          scrollController.position.maxScrollExtent - 300 &&
+          posts.isNotEmpty) {
+        page += 1;
+        await _getPostsData();
+      }
+    });
   }
 
   Future<void> getData(String searchTarget) async {
@@ -104,18 +109,26 @@ class SearchChallengeProvider extends ChangeNotifier {
     notifyListeners();
   }
   Future<void> _getPostsData() async {
-    // if(keywordController.text.isNotEmpty) {
-    //   challengesData = await challengeRepository.getChallengeList(
-    //     '',
-    //     keywordController.text,
-    //     page,
-    //     10,
-    //     '',
-    //   );
-    //   if (challengesData != null && challengesData!.content.isNotEmpty) {
-    //     challenges.addAll(challengesData!.content);
-    //   }
-    // }
+    posts = await communityRepository.getPosts(keywordController.text, page, 10, '');
+    if(posts.isNotEmpty) {
+      allPosts.addAll(posts);
+    }
+    havePost = true;
     notifyListeners();
   }
+
+  String check(String target) {
+    if(target == '챌린지') {
+      if(challengesData == null) {
+        return keywordController.text.isEmpty ? '빈상자' : '기다리기';
+      } else {
+        return challengesData!.total_elements == 0 ? '없습니다' : '결과값';
+      }
+    } else if(posts.isEmpty) {
+      return keywordController.text.isEmpty ? '빈상자' : '기다리기';
+    } else {
+      return !havePost ? '없습니다' : '결과값';
+    }
+  }
+
 }

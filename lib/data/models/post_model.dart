@@ -8,8 +8,8 @@ class PostModel {
   final String authorTier;
   final int reactionCount;
   final int commentCount;
-  final String createdAt;
-  final String? updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   PostModel({
     required this.id,
@@ -25,17 +25,21 @@ class PostModel {
     required this.updatedAt,
   });
 
-  factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
-    id: json['id'],
-    title: json['title'],
-    content: json['content'],
-    authorName: json['author_name'],
-    authorId: json['author_id'],
-    authorProfile: json['author_profile'],
-    authorTier: json['author_tier'],
-    reactionCount: json['reaction_count'],
-    commentCount: json['comment_count'],
-    createdAt: json['created_at'],
-    updatedAt: json['updated_at'],
-  );
+  factory PostModel.fromJson(Map<String, dynamic> json) {
+    DateTime create = DateTime.parse(json['created_at']);
+    DateTime update = DateTime.parse(json['updated_at']);
+    return PostModel(
+      id: json['id'],
+      title: json['title'],
+      content: json['content'],
+      authorName: json['author_name'],
+      authorId: json['author_id'],
+      authorProfile: json['author_profile'],
+      authorTier: json['author_tier'],
+      reactionCount: json['reaction_count'],
+      commentCount: json['comment_count'],
+      createdAt: create,
+      updatedAt: update,
+    );
+  }
 }

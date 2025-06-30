@@ -4,18 +4,32 @@ import 'package:dooit/data/models/post_model.dart';
 import 'package:dooit/presentation/screens/community/post_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class PostItem extends StatelessWidget {
-  const PostItem({super.key, required this.postData});
+import '../../providers/community/community_provider.dart';
+
+class PostItem extends StatefulWidget {
+  const PostItem({super.key, required this.postData, this.provider});
 
   final PostModel postData;
+  final CommunityProvider? provider;
 
+  @override
+  State<PostItem> createState() => _PostItemState();
+}
+
+class _PostItemState extends State<PostItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        Navigator.of(context).push(CupertinoPageRoute(builder: (context) => PostScreen(postId: 13),));
+        Navigator.of(context).push(CupertinoPageRoute(builder: (context) => PostScreen(postId: widget.postData.id),)).then((value) {
+          if(widget.provider != null) {
+            widget.provider!.resetPosts();
+            widget.provider!.getPosts();
+          }
+        },);
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10),
@@ -25,23 +39,24 @@ class PostItem extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  width: 25,
-                  height: 25,
+                  width: 40,
+                  height: 40,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.grey,
+                    color: Colors.transparent,
                   ),
+                  child: Image.asset('assets/images/${widget.postData.authorProfile}.png'),
                 ),
                 SizedBox(width: 5),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      postData.authorName,
+                      widget.postData.authorName,
                       style: mediumText(size: 12, color: Colors.black),
                     ),
                     Text(
-                      postData.createdAt,
+                      DateFormat('yyyy-MM-dd').format(widget.postData.updatedAt),
                       style: mediumText(size: 10, color: greyColor),
                     ),
                   ],
@@ -60,14 +75,14 @@ class PostItem extends StatelessWidget {
                     color: litePointColor,
                   ),
                   child: Text(
-                    postData.authorTier,
+                    widget.postData.authorTier,
                     style: semiBoldText(size: 11, color: pointColor),
                   ),
                 ),
                 SizedBox(width: 5),
                 Expanded(
                   child: Text(
-                    postData.title,
+                    widget.postData.title,
                     style: semiBoldText(size: 16, color: Colors.black),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -77,12 +92,16 @@ class PostItem extends StatelessWidget {
             SizedBox(height: 5,),
             SizedBox(
               width: double.infinity,
-              child: Text(postData.content, style: mediumText(size: 12, color: Colors.black), overflow: TextOverflow.ellipsis, maxLines: 2,),
+              child: Text(widget.postData.content, style: mediumText(size: 12, color: Colors.black), overflow: TextOverflow.ellipsis, maxLines: 2,),
             ),
             SizedBox(height: 10,),
-            _iconAndData(text: postData.commentCount, icon: Icons.chat),
-            SizedBox(height: 5,),
-            _iconAndData(text: postData.reactionCount, icon: Icons.favorite),
+            Row(
+              children: [
+                _iconAndData(text: widget.postData.commentCount, icon: Icons.chat),
+                SizedBox(width: 5,),
+                _iconAndData(text: widget.postData.reactionCount, icon: Icons.favorite),
+              ],
+            ),
             SizedBox(height: 10,),
             Container(
               width: double.infinity,
@@ -106,5 +125,4 @@ class PostItem extends StatelessWidget {
       ),
     );
   }
-
 }

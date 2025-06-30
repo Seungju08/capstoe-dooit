@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class HotTalkItem extends StatelessWidget {
   const HotTalkItem({super.key, required this.postData});
 
- final PostModel postData;
+  final PostModel postData;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class HotTalkItem extends StatelessWidget {
           // 뒷 배경
           Column(
             children: [
-              SizedBox(height: 20,),
+              SizedBox(height: 25,),
               Container(
                 padding: EdgeInsets.all(15),
                 width: 180,
@@ -43,26 +43,36 @@ class HotTalkItem extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 10,),
-                    _iconAndData(text: postData.commentCount, icon: Icons.chat),
-                    SizedBox(height: 5,),
-                    _iconAndData(text: postData.reactionCount, icon: Icons.favorite),
+                    Spacer(),
+                    Row(
+                      children: [
+                        _iconAndData(text: postData.commentCount, icon: Icons.chat),
+                        SizedBox(width: 5,),
+                        _iconAndData(text: postData.reactionCount, icon: Icons.favorite),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ],
           ),
           // 프로필
-          Row(
+          Column(
             children: [
-              SizedBox(width: 13,),
-              Container(
-                width: 45,
-                height: 45,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.grey,
-                ),
+              SizedBox(height: 5,),
+              Row(
+                children: [
+                  SizedBox(width: 10,),
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.transparent,
+                    ),
+                    child: Image.asset('assets/images/${postData.authorProfile}.png'),
+                  ),
+                ],
               ),
             ],
           ),
@@ -70,12 +80,12 @@ class HotTalkItem extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(horizontal: 7),
-            height: 23,
+            height: 20,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(200),
               color: litePointColor,
             ),
-            child: Text(postData.authorTier, style: semiBoldText(size: 11, color: pointColor),),
+            child: Text(postData.authorTier, style: semiBoldText(size: 9, color: pointColor),),
           ),
         ],
       ),

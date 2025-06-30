@@ -1,23 +1,30 @@
-import 'package:flutter/cupertino.dart';
-
-import '../../../data/models/post_model.dart';
+import 'package:dooit/data/models/detail_post_model.dart';
+import 'package:dooit/data/repositories/community_repository.dart';
+import 'package:flutter/material.dart';
 
 class PostProvider extends ChangeNotifier {
-  PostModel? postData;
+  final CommunityRepository communityRepository = CommunityRepository();
+  DetailPostModel? postData;
 
-  void getPostData() {
-    postData = PostModel(id: 16,
-        title: '하루 살이',
-        content: '끝까지 넌 참 많은걸 가르쳐 내가 몰랐던 것들을 알게해\n어쩌면 날 버리고 떠나서도 계속 내 주변을 맴도는듯해 사랑을 가려져 기쁨알게하고 이별을 가르져 눈물 알게하고 술 마시면 또 보고싶어 왜 잊는법은 안 가르지고 떠난 거야',
-        authorName: 'quswldn',
-        authorId: 89,
-        authorTier: '헬고수',
-        commentCount: 40,
-        createdAt: '2025-06-05',
-        updatedAt: null,
-      reactionCount: 25,
-      authorProfile: 1,
-    );
+  Future<void> getPostData(int id) async {
+    postData = await communityRepository.getDetailPost(id);
     notifyListeners();
   }
+
+  Future<void> sendReaction(int id, String reaction) async {
+    await communityRepository.postReaction(id, reaction);
+    await getPostData(id);
+    notifyListeners();
+  }
+
+  Future<void> deletePost(int id, BuildContext context) async {
+    if(await communityRepository.deletePost(id)) {
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('게시글을 삭제하지 못했습니다'))
+      );
+    }
+  }
+
 }

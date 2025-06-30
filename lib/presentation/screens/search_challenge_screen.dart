@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/challenges/challenge_item.dart';
+import '../widgets/community/post_item.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key, required this.searchTarget});
@@ -97,49 +98,51 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
             SizedBox(height: 20,),
-            provider.challengesData == null
-                ? provider.keywordController.text.isEmpty ? SizedBox.shrink() : Text('검색 결과를 불러오는 중 입니다.')
-                : provider.challengesData!.total_elements == 0
-                    // 챌린지 겁색 안된 경우
-                  ? Expanded(
-                    child: Column(
-                        children: [
-                          Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text('${provider.challengesData!.total_elements}개의 검색결과', style: mediumText(size: 12, color: greyColor),),
-                          ),
-                          Spacer(),
-                          Text('\'${provider.keywordController.text}\' ${provider.nothingText}',
-                            style: mediumText(
-                                size: 14, color: greyColor), textAlign: TextAlign.center,),
-                          SizedBox(height: 20,),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(CupertinoPageRoute(builder: (context) => AddChallengeScreen(),));
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: 130,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: pointColor,
-                                borderRadius: BorderRadius.circular(200),
-                              ),
-                              child: Text(
-                                provider.buttonText,
-                                style: semiBoldText(size: 16, color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          Spacer(),
-                                  ],
-                                ),
-                  )
-                    // 챌린지 검색 된 경우
-                  : SingleChildScrollView(
-            controller: provider.scrollController,
-            child: Column(
-              children: provider.challenges.map((e) => ChallengeItem(challenge: e)).toList(),),
+            provider.check(widget.searchTarget) == '빈상자' ? SizedBox.shrink()
+                : provider.check(widget.searchTarget) == '기다리기' ? Text('검색 결과를 불러오는 중 입니다.')
+                : provider.check(widget.searchTarget) == '없습니다' ? Expanded(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text('${widget.searchTarget == '챌린지' ? provider.challengesData!.total_elements : provider.allPosts.length}개의 검색결과', style: mediumText(size: 12, color: greyColor),),
+                  ),
+                  Spacer(),
+                  Text('\'${provider.keywordController.text}\' ${provider.nothingText}',
+                    style: mediumText(
+                        size: 14, color: greyColor), textAlign: TextAlign.center,),
+                  SizedBox(height: 20,),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(CupertinoPageRoute(builder: (context) => AddChallengeScreen(),));
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 130,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: pointColor,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: Text(
+                        provider.buttonText,
+                        style: semiBoldText(size: 16, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                ],
+              ),
+            )
+                : Expanded(
+              child: SingleChildScrollView(
+                controller: provider.scrollController,
+                child: Column(
+                  children: widget.searchTarget == '챌린지'
+                      ? provider.challenges.map((e) => ChallengeItem(challenge: e)).toList()
+                      : provider.allPosts.map((e) => PostItem(postData: e)).toList(),
+                ),
+              ),
             ),
           ],
         ),

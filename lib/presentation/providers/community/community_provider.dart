@@ -1,6 +1,6 @@
 import 'package:dooit/data/models/post_model.dart';
+import 'package:dooit/data/repositories/community_repository.dart';
 import 'package:flutter/cupertino.dart';
-import '../../../data/repositories/community_repository.dart';
 
 class CommunityProvider extends ChangeNotifier {
   final CommunityRepository communityRepository = CommunityRepository();
@@ -9,7 +9,13 @@ class CommunityProvider extends ChangeNotifier {
   String sort = '';
   List<PostModel> posts = [];
   List<PostModel> allPosts = [];
+  List<PostModel> popularPosts = [];
   int page = 0;
+
+  void getPopularPosts() async {
+    popularPosts = await communityRepository.getPopularPosts();
+    notifyListeners();
+  }
 
   void changeCategory(String newCategory) {
     selectCategory = newCategory;
@@ -42,7 +48,7 @@ class CommunityProvider extends ChangeNotifier {
     switch (sort) {
       case 'REACTION':
         return '리액션 많은 순';
-      case 'COMMENTS':
+      case 'COMMENT':
         return '댓글 많은 순';
       default:
         return '최신순';
@@ -54,9 +60,9 @@ class CommunityProvider extends ChangeNotifier {
       case '리액션 많은 순':
         return 'REACTION';
       case '댓글 많은 순':
-        return 'COMMENTS';
+        return 'COMMENT';
       default:
-        return '';
+        return 'LATEST';
     }
   }
 
@@ -65,8 +71,6 @@ class CommunityProvider extends ChangeNotifier {
     if(posts.isNotEmpty) {
       allPosts.addAll(posts);
     }
-    print(posts);
-    print('한글${allPosts}');
     notifyListeners();
   }
 
