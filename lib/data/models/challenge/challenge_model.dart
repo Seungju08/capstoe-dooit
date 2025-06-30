@@ -15,6 +15,7 @@ class ChallengeModel {
   final String tier;
   final List<MyProgressModel>? myProgressList;
   final int? totalAchieveMinutes;
+  final int challenge_img;
   // final String imgCode;
 
   ChallengeModel({
@@ -32,6 +33,7 @@ class ChallengeModel {
     required this.tier,
     required this.myProgressList,
     required this.totalAchieveMinutes,
+    required this.challenge_img,
     // required this.imgCode,
   });
 
@@ -58,6 +60,7 @@ class ChallengeModel {
       tier: json['tier'],
       myProgressList: myProgressList,
       totalAchieveMinutes: json['total_acheive_minutes'], // 철자 나중에 바꿀꺼
+      challenge_img: json['challenge_img'],
       // imgCode: json['imgCode'],
     );
   }

@@ -64,7 +64,7 @@ class _DetailChallengeScreenState extends State<DetailChallengeScreen> {
                     width: double.infinity,
                     height: 250,
                     color: Colors.grey,
-                    child: Image.asset('assets/images/challenge_imgs/9.png', fit: BoxFit.cover,),
+                    child: Image.asset('assets/images/challenge_imgs/${detailChallengeProvider.challenge!.challenge_img}.png', fit: BoxFit.fitWidth,),
                   ),
                   // 설명
                   Container(

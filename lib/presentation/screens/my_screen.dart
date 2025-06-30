@@ -88,7 +88,7 @@ class _MyScreenState extends State<MyScreen> {
                       alignment: Alignment.bottomRight,
                       children: [
                         Image.asset(
-                          'assets/images/0.png',
+                          'assets/images/${myProvider.userData!.profile}.png',
                           fit: BoxFit.cover,
                         ),
                         // Padding(
@@ -263,7 +263,7 @@ class _MyScreenState extends State<MyScreen> {
                     ],
                   ),
                   Spacer(),
-                  Container(width: 60, height: 60, color: Colors.blue),
+                  Container(width: 90, height: 90, child: Image.asset('assets/images/0.png'),),
                 ],
               ),
             ),

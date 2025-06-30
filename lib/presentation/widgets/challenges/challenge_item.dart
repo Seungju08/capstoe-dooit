@@ -34,6 +34,7 @@ class ChallengeItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               color: Colors.blue,
             ),
+            child: Image.asset('assets/images/challenge_imgs/${challenge.challenge_img}.png', fit: BoxFit.fitWidth,),
           ),
           SizedBox(width: 12,),
           Expanded(

@@ -8,6 +8,7 @@ class ViewChallengeModel {
   final String startDate;
   final String endDate;
   final bool finished;
+  final int challenge_img;
 
   ViewChallengeModel({
     required this.challengeId,
@@ -19,6 +20,7 @@ class ViewChallengeModel {
     required this.startDate,
     required this.endDate,
     required this.finished,
+    required this.challenge_img,
   });
 
   factory ViewChallengeModel.fromJson(Map<String, dynamic> json) =>
@@ -32,5 +34,6 @@ class ViewChallengeModel {
         startDate: json['start_date'],
         endDate: json['end_date'],
         finished: json['finished'],
+        challenge_img: json['challenge_img'],
       );
 }
