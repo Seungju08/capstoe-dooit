@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/challenges/challenge_item.dart';
 import '../widgets/community/post_item.dart';
+import 'community/add_post_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key, required this.searchTarget});
@@ -114,7 +115,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   SizedBox(height: 20,),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(CupertinoPageRoute(builder: (context) => AddChallengeScreen(),));
+                      Navigator.of(context).push(CupertinoPageRoute(builder: (context) => widget.searchTarget == '챌린지' ? AddChallengeScreen() : AddPostScreen()));
                     },
                     child: Container(
                       alignment: Alignment.center,

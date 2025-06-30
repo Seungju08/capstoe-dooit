@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../common/colors.dart';
 import '../../../common/fonts.dart';
 import '../../providers/challenges/detail_challenge_provider.dart';
@@ -142,14 +141,11 @@ class _DetailChallengeScreenState extends State<DetailChallengeScreen> {
                         Row(
                           children: [
                             Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.blue,
-                              ),
+                              width: 50,
+                              height: 50,
+                              child: Image.asset('assets/images/${detailChallengeProvider.challenge!.user_profile}.png'),
                             ),
-                            SizedBox(width: 15,),
+                            SizedBox(width: 5,),
                             // 사용자 정보
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

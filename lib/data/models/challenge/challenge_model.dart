@@ -16,6 +16,7 @@ class ChallengeModel {
   final List<MyProgressModel>? myProgressList;
   final int? totalAchieveMinutes;
   final int challenge_img;
+  final int user_profile;
   // final String imgCode;
 
   ChallengeModel({
@@ -34,6 +35,7 @@ class ChallengeModel {
     required this.myProgressList,
     required this.totalAchieveMinutes,
     required this.challenge_img,
+    required this.user_profile,
     // required this.imgCode,
   });
 
@@ -61,6 +63,7 @@ class ChallengeModel {
       myProgressList: myProgressList,
       totalAchieveMinutes: json['total_acheive_minutes'], // 철자 나중에 바꿀꺼
       challenge_img: json['challenge_img'],
+      user_profile: json['user_profile'],
       // imgCode: json['imgCode'],
     );
   }

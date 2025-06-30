@@ -1,8 +1,11 @@
-import 'package:dooit/common/colors.dart';
-import 'package:dooit/presentation/providers/community/post_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../../../common/colors.dart';
 import '../../../common/fonts.dart';
+import '../../providers/community/post_provider.dart';
+import 'add_post_screen.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key, required this.postId});
@@ -69,8 +72,54 @@ class _PostScreenState extends State<PostScreen> {
                           ),
                           Spacer(),
                           GestureDetector(
-                            onTap: () async {
-                              await provider.deletePost(widget.postId, context);
+                            onTap: () {
+                              showModalBottomSheet(context: context, builder: (context) {
+                                return Container(
+                                  width: double.infinity,
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                    color: Colors.white,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 15,),
+                                      Container(
+                                        width: 50,
+                                        height: 6,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(200),
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      SizedBox(height: 15,),
+                                      _selectSort(text: '수정하기', function: () {
+                                        Navigator.of(context).push(CupertinoPageRoute(builder: (context) => AddPostScreen(),));
+                                      }),
+                                      _selectSort(text: '삭제하기', function: () async {
+                                        await provider.deletePost(widget.postId, context);
+                                      }, last: true),
+                                    ],
+                                  ),
+                                );
+                              },);
+                              // showBottomSheet(context: context, builder: (context) {
+                              //   return Container(
+                              //     width: double.infinity,
+                              //     height: 200,
+                              //     color: Colors.white,
+                              //     child: Column(
+                              //       children: [
+                              //         _selectSort(text: '수정하기', function: () {
+                              //           Navigator.of(context).push(CupertinoPageRoute(builder: (context) => AddPostScreen(),));
+                              //         },),
+                              //         _selectSort(text: '삭제하기', function: () async {
+                              //           await provider.deletePost(widget.postId, context);
+                              //         }, last: true),
+                              //       ],
+                              //     ),
+                              //   );
+                              // },);
                             },
                             child: Icon(Icons.more_vert, size: 25, color: Colors.black,),
                           ),
@@ -187,26 +236,23 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-// Widget _selectSort({required String text, required VoidCallback function, bool last = false}) {
-//   return GestureDetector(
-//     onTap: () async {
-//       final navigator = Navigator.of(context);
-//       navigator.pop();
-//     },
-//     child: Container(
-//       alignment: Alignment.center,
-//       height: 60,
-//       width: double.infinity,
-//       decoration: BoxDecoration(
-//           border: last ? null : Border(bottom: BorderSide(width: 1.5, color: Colors.grey.withValues(alpha: 0.5)))
-//       ),
-//       child: Text(text, style: TextStyle(
-//         fontSize: 16,
-//         fontWeight: FontWeight.bold,
-//         color: provider.sortToText() == text ? pointColor.withValues(alpha: 0.5) : Colors.black,
-//       ),),
-//     ),
-//   );
-// }
+  Widget _selectSort({required String text, required VoidCallback function, bool last = false}) {
+    return GestureDetector(
+      onTap: function,
+      child: Container(
+        alignment: Alignment.center,
+        height: 60,
+        width: double.infinity,
+        decoration: BoxDecoration(
+            border: last ? null : Border(bottom: BorderSide(width: 1.5, color: Colors.grey.withValues(alpha: 0.5)))
+        ),
+        child: Text(text, style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color:Colors.black,
+        ),),
+      ),
+    );
+  }
 
 }

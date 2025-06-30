@@ -125,7 +125,7 @@ class SearchChallengeProvider extends ChangeNotifier {
         return challengesData!.total_elements == 0 ? '없습니다' : '결과값';
       }
     } else if(posts.isEmpty) {
-      return keywordController.text.isEmpty ? '빈상자' : '기다리기';
+      return keywordController.text.isEmpty ? '빈상자' : havePost ? '없습니다' : '기다리기';
     } else {
       return !havePost ? '없습니다' : '결과값';
     }

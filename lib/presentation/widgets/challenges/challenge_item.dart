@@ -27,14 +27,13 @@ class ChallengeItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: 90,
-            height: 90,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.blue,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: SizedBox(
+              width: 90,
+              height: 90,
+              child: Image.asset('assets/images/challenge_imgs/${challenge.challenge_img}.png', fit: BoxFit.cover,),
             ),
-            child: Image.asset('assets/images/challenge_imgs/${challenge.challenge_img}.png', fit: BoxFit.fitWidth,),
           ),
           SizedBox(width: 12,),
           Expanded(
